@@ -1,3 +1,4 @@
+import traceback
 import telebot
 from telebot import types
 import os
@@ -173,6 +174,7 @@ class TeleConverterBot:
 
         except Exception as e:
             self.bot.reply_to(message, f"❌ Помилка: {e}")
+            traceback.print_exc()
 
         finally:
             if os.path.exists(input_path): os.remove(input_path)

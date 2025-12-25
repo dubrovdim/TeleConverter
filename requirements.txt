@@ -1,6 +1,5 @@
 pyTelegramBotAPI
-docx2pdf
-img2pdf
-pytesseract
-Pillow
 python-dotenv
+requests
+convertapi
+img2pdf
