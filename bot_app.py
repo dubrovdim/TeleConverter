@@ -147,9 +147,13 @@ class TeleConverterBot:
         }
 
     def _process_docx(self, message, temp_dir):
+        original_filename = message.document.file_name
+        pdf_filename = os.path.splitext(original_filename)[0] + ".pdf"
+
         unique_id = uuid.uuid4().hex
         input_path = os.path.join(temp_dir, f"{unique_id}.docx")
-        output_path = os.path.join(temp_dir, f"{unique_id}.pdf")
+
+        output_path = os.path.join(temp_dir, pdf_filename)
 
         try:
             file_info = self.bot.get_file(message.document.file_id)
@@ -158,11 +162,12 @@ class TeleConverterBot:
             with open(input_path, 'wb') as new_file:
                 new_file.write(downloaded_file)
 
-            self.bot.send_message(message.chat.id, "⏳ Починаю конвертацію...")
+            self.bot.send_message(message.chat.id, f"⏳ Конвертую...", parse_mode="Markdown")
 
-            # Виклик сервісу
+            # Конвертація
             self.converter_service.docx_to_pdf(input_path, output_path)
 
+            # Відправка файлу
             with open(output_path, 'rb') as pdf_file:
                 self.bot.send_document(message.chat.id, pdf_file)
 
