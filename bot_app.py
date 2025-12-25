@@ -15,7 +15,7 @@ class TeleConverterBot:
         self.bot = telebot.TeleBot(Config.TOKEN)
 
         # Ініціалізація сервісів
-        self.ocr_service = OCRService(Config.TESSERACT_PATH)
+        self.ocr_service = OCRService()
         self.converter_service = ConverterService()
 
         # Зберігання стану користувачів

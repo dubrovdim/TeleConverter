@@ -1,21 +1,24 @@
-import pytesseract
-from PIL import Image
+import easyocr
 import os
 
 
 class OCRService:
-    def __init__(self, tesseract_path: str):
-        # Налаштовуємо шлях при створенні екземпляра класу
-        self.tesseract_cmd = tesseract_path
-        pytesseract.pytesseract.tesseract_cmd = self.tesseract_cmd
+    def __init__(self, tesseract_path: str = None):
 
-    def recognize_text(self, image_paths: list[str], lang='ukr+rus+eng') -> str:
+        print("⏳ Завантаження моделі EasyOCR... Це може зайняти час при першому запуску.")
+        # Ініціалізуємо рідера для української (uk), російської (ru) та англійської (en)
+        # gpu=False, якщо запускаєш на слабкому сервері без відеокарти.
+        # Якщо є NVIDIA GPU, став gpu=True для швидкості.
+        self.reader = easyocr.Reader(['uk', 'ru', 'en'], gpu=False)
+
+    def recognize_text(self, image_paths: list[str]) -> str:
         result_text = ""
         for img_path in image_paths:
             try:
-                with Image.open(img_path) as image:
-                    text = pytesseract.image_to_string(image, lang=lang)
-                    result_text += f"\n--- {os.path.basename(img_path)} ---\n{text.strip()}\n"
+                text_list = self.reader.readtext(img_path, detail=0, paragraph=True)
+                full_text = "\n".join(text_list)
+
+                result_text += f"\n--- {os.path.basename(img_path)} ---\n{full_text}\n"
             except Exception as e:
                 result_text += f"⚠️ Помилка обробки {os.path.basename(img_path)}: {e}\n"
 
