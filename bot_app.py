@@ -5,24 +5,35 @@ import os
 import uuid
 import tempfile
 import shutil
+from threading import Thread
+from flask import Flask, request
 from config import Config
 from services.ocr_service import OCRService
 from services.converter_service import ConverterService
 
+server = Flask(__name__)
+
+@server.route('/')
+def home():
+    return "Bot is alive!"
+
+def run_web_server():
+    port = int(os.environ.get("PORT", 8080))
+    server.run(host="0.0.0.0", port=port)
+
+def keep_alive():
+    t = Thread(target=run_web_server)
+    t.start()
 
 class TeleConverterBot:
     def __init__(self):
-        # Ініціалізація бота
         self.bot = telebot.TeleBot(Config.TOKEN)
 
-        # Ініціалізація сервісів
         self.ocr_service = OCRService()
         self.converter_service = ConverterService()
 
-        # Зберігання стану користувачів
         self.user_states = {}
 
-        # Реєстрація обробників
         self.register_handlers()
 
     def register_handlers(self):
@@ -217,5 +228,6 @@ class TeleConverterBot:
 
 
 if __name__ == "__main__":
+    keep_alive()
     bot_app = TeleConverterBot()
     bot_app.run()
