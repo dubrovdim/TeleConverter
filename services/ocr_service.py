@@ -15,7 +15,10 @@ class OCRService:
                 with open(img_path, 'rb') as f:
                     payload = {
                         'apikey': self.api_key,
-                        'language': 'eng',
+                        'OCREngine': 2,
+                        'language': 'auto',
+                        'scale': True,
+                        'detectOrientation': True,
                         'isOverlayRequired': False
                     }
                     files = {'file': f}
