@@ -16,7 +16,7 @@ class OCRService:
                     payload = {
                         'apikey': self.api_key,
                         'OCREngine': 2,
-                        'language': 'eng',
+                        'language': auto,
                         'scale': True,
                         'detectOrientation': True,
                         'isOverlayRequired': False
