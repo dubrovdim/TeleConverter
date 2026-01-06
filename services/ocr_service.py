@@ -17,8 +17,6 @@ class OCRService:
                         'apikey': self.api_key,
                         'OCREngine': 2,
                         'language': auto,
-                        'scale': True,
-                        'detectOrientation': True,
                         'isOverlayRequired': False
                     }
                     files = {'file': f}
